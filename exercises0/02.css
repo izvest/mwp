@@ -1,0 +1,33 @@
+html, body{
+    background: #222;
+}
+
+.container{
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+p, li, ul, table{
+    text-decoration:none;
+    font-family:Helvetica;
+    font-size:14px;
+    color:#FFFFFF;
+}
+
+h1, h2, h3{
+    text-decoration:bold;
+    font-family:Helvetica;
+    color:#FFFFFF;
+    padding-bottom:5px;
+    }
+
+img#frog {
+    justify-content: flex-end;
+    height: 10em;
+    width: 10em;
+}
+
+a:hover {
+    color: #EFEFEF;
+}
