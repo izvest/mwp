@@ -2,19 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
-    const course = 'Superadvanced web and mobile programming'
-    const part1 = 'Basics of React'
-    const exercises1 = 8
-    const part2 = 'Using props'
-    const exercises2 = 10
-    const part3 = 'Component states'
-    const exercises3 = 12
+  const course = {
+    name: 'Superadvanced web and mobile programming',
+    parts: [
+      {
+        name: 'Basics of React',
+        exercises: 8
+      },
+      {
+        name: 'Using props',
+        exercises: 10
+      },
+      {
+        name: 'Component states',
+        exercises: 12
+      }
+    ]
+  }
+
   
     return (
       <div>
-        <Header name={course}/>
-        <Content first={[part1, exercises1]} second={[part2, exercises2]} third={[part3, exercises3]}/>
-        <Total count={exercises1+exercises2+exercises3}/>
+        <Header name={course['name']}/>
+        <Content parts={course['parts']}/>
+        <Total input={course['parts']}/>
       </div>
     )
   }
@@ -27,22 +38,28 @@ const App = () => {
 
   const Content = (props) => (
     <div>
-          <Part name={props.first[0]} count={props.first[1]}/>
-          <Part name={props.second[0]} count={props.second[1]}/>
-          <Part name={props.third[0]} count={props.third[1]}/>
+          <Part input={props.parts[0]}/>
+          <Part input={props.parts[1]}/>
+          <Part input={props.parts[2]}/>
     </div>
 )
 
   const Part = (props) => (
     <div>
-        <p>{props.name} {props.count}</p>
+        <p>{props.input.name} {props.input.exercises}</p>
     </div>
 )
 
-const Total = (props) => (
+const Total = (props) => {
+    let total = 0;
+    for (let i = 0; i < props.input.length; i++){
+      total += props.input[i].exercises;
+    }
+    return(
     <div>
-        <p>Total {props.count} exercises</p>
+        <p>Total {total} exercises</p>
     </div>
-)
+    )
+  }
 
 ReactDOM.render(<App />, document.getElementById('root'));
