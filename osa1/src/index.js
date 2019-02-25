@@ -76,21 +76,21 @@ class Feed extends React.Component {
     }
   }
 
-  klikPos = () => {
+  positiivinen = () => {
     this.setState({
       pos: this.state.pos + 1,
       total: this.state.total + 1
     })
   }
 
-  klikNeg = () => {
+  negatiivinen = () => {
     this.setState({
       neg: this.state.neg + 1,
       total: this.state.total + 1
     })
   }
 
-  klikNeut = () => {
+  neutraali = () => {
     this.setState({
       neut: this.state.neut + 1,
       total: this.state.total + 1
@@ -103,21 +103,51 @@ class Feed extends React.Component {
       <div>
         <div>
           <h1>Anna palautetta</h1>
-          <button onClick={this.klikPos}>Posiiivinen</button>
-          <button onClick={this.klikNeut}>Neutraali</button>
-          <button onClick={this.klikNeg}>Negatiivinen</button>
+          <Button handleClick={this.positiivinen} text="Positiivnen"/>
+          <Button handleClick={this.neutraali} text="Neutraali"/>
+          <Button handleClick={this.negatiivinen} text="Negatiivinen"/>
           <br></br>
-          <p>Positiivisia: {this.state.pos}</p>
-          <p>Neutraaleja: {this.state.neut}</p>
-          <p>Negatiivisia: {this.state.neg}</p>
-          <br></br>
-          <p>Total times feedback given: {this.state.total}</p>
-          <p>Keskiarvo: {Math.round(100*(this.state.pos-this.state.neg)/this.state.total)/100}</p>
-          <p>Positiivisia: {Math.round(100*this.state.pos/this.state.total)} %</p>
+          <Statistics pos={this.state.pos} neg={this.state.neg} total={this.state.total} neut={this.state.neut}/>
         </div>
       </div>
     )
   }
 }
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+const Statistics = ({ pos, neg, total, neut }) => {
+  if(total == 0){
+    return(
+      <div>
+        <h1>Stats</h1>
+        <p>Palatetta ei ole annettu vielä</p>
+      </div>
+    )
+  }
+  return(
+  <div>
+    <h1>Stats</h1>
+    <table>
+      <Statistic name="positiivisia" data={pos}/>
+      <Statistic name="neutraaleja" data={neut}/>
+      <Statistic name="negatiivisia" data={neg}/>
+      <br></br>
+      <Statistic name="total feedback given" data={total}/>
+      <Statistic name="keskiarvo" data={Math.round(100*(pos-neg)/total)/100}/>
+      <Statistic name="positiivisia" data={Math.round(100*pos/total)+"%"}/>
+    </table>
+  </div>
+)}
+
+const Statistic = ({ name, data }) => (
+  <tr>
+    <td>{name}:</td><td>{data}</td>
+  </tr>
+)
 
 ReactDOM.render(<Feed />, document.getElementById('feedback'));
