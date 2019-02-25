@@ -133,13 +133,14 @@ const Statistics = ({ pos, neg, total, neut }) => {
   <div>
     <h1>Stats</h1>
     <table>
+      <tbody>
       <Statistic name="positiivisia" data={pos}/>
       <Statistic name="neutraaleja" data={neut}/>
       <Statistic name="negatiivisia" data={neg}/>
-      <br></br>
       <Statistic name="total feedback given" data={total}/>
       <Statistic name="keskiarvo" data={Math.round(100*(pos-neg)/total)/100}/>
       <Statistic name="positiivisia" data={Math.round(100*pos/total)+"%"}/>
+      </tbody>
     </table>
   </div>
 )}
