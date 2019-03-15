@@ -1,16 +1,29 @@
 import React from 'react';
+import axios from 'axios';
 
 class Puhelinluettelo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { name: 'Arto Hellas', number: '0000'}
-      ],
+      persons: [],
       newName: '',
       newNumber: ''
     }
   }
+
+  componentDidMount = () => (
+    this.fetchData()
+  )
+
+  fetchData = () => (
+    axios.get('http://localhost:3001/persons').then(response => {
+      this.setState({
+        persons: response.data,
+        newName: '',
+        newNumber: ''
+      })
+    })
+  )
 
   handleNameChange = (event) => {
     console.log(event.target.value)
@@ -26,7 +39,8 @@ class Puhelinluettelo extends React.Component {
     event.preventDefault()
     const nameObject = {
       name: this.state.newName,
-      number: this.state.newNumber
+      number: this.state.newNumber,
+      id: this.state.persons.length+1
     }
 
     if (nameObject.name === '' || nameObject.number === ''){alert("every contact needs both name and number")}
@@ -38,13 +52,11 @@ class Puhelinluettelo extends React.Component {
           newNumber: ''
         })
       }else{
-        const contacts = this.state.persons.concat(nameObject)
-    
-        this.setState({
-          persons: contacts,
-          newName: '',
-          newNumber: ''
-        })
+        axios.post('http://localhost:3001/persons', nameObject)
+          .then(response => {
+            console.log(response)
+            this.fetchData()
+          })
       }
     }
   }
@@ -60,12 +72,26 @@ class Puhelinluettelo extends React.Component {
   }
 }
 
+const Delete = (id) => {
+  if(window.confirm("You sure you want to delete this, m8?")){
+    axios.delete('http://localhost:3001/persons'+id).then(response => {
+      console.log("contact deleted")
+    })
+  }
+}
+
 const List = ({caller}) => (
   <div>
     <h2>Numerot</h2>
-    <ul>
-      {caller.state.persons.map(n => <li>{n.name}  {n.number}</li>)}
-    </ul>
+    <table><tbody>
+      {caller.state.persons.map(n => 
+        <tr>
+          <td>{n.name}</td>
+          <td>{n.number} </td>
+          <td><button onClick={Delete(n.id)}>poista</button></td>
+        </tr>
+      )}
+    </tbody></table>
   </div>
 )
 
@@ -95,6 +121,6 @@ const Button = (type) => (
   <div>
     <button type={type}>lisää</button>
   </div>
-) 
+)
 
 export default Puhelinluettelo
