@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Course from './Course';
+import Course from './components/Course';
+import Puhelinluettelo from './Puhelinluettelo'
 
 const App = () => {
     const course = {
@@ -27,6 +28,7 @@ const App = () => {
     return (
       <div>
         <Course course={course} />
+        <Puhelinluettelo/>
       </div>
     )
   }
