@@ -51,7 +51,7 @@ class Puhelinluettelo extends React.Component {
     const nameObject = {
       name: this.state.newName,
       number: this.state.newNumber,
-      id: this.state.persons.length+1
+      id: Math.round(Math.random()*10000)
     }
 
     if (nameObject.name === '' || nameObject.number === ''){alert("every contact needs both name and number")}
