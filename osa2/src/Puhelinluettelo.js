@@ -35,6 +35,17 @@ class Puhelinluettelo extends React.Component {
     this.setState({ newNumber: event.target.value })
   }
 
+  deleteEntry = (event, idNum) => {
+    event.preventDefault()
+    if(window.confirm("You sure you want to delete this, m8?")){
+      console.log(idNum)
+      axios.delete('http://localhost:3001/persons/'+idNum).then(response => {
+        console.log("contact deleted")
+        this.fetchData()
+      })
+    }
+  }
+
   addName = (event) => {
     event.preventDefault()
     const nameObject = {
@@ -72,33 +83,27 @@ class Puhelinluettelo extends React.Component {
   }
 }
 
-const Delete = (id) => {
-  if(window.confirm("You sure you want to delete this, m8?")){
-    axios.delete('http://localhost:3001/persons'+id).then(response => {
-      console.log("contact deleted")
-    })
-  }
-}
-
 const List = ({caller}) => (
   <div>
     <h2>Numerot</h2>
-    <table><tbody>
-      {caller.state.persons.map(n => 
-        <tr>
-          <td>{n.name}</td>
-          <td>{n.number} </td>
-          <td><button onClick={Delete(n.id)}>poista</button></td>
-        </tr>
-      )}
-    </tbody></table>
+    <table>
+      <tbody>
+        {caller.state.persons.map(n => 
+          <tr>
+            <td>{n.name}</td>
+            <td>{n.number} </td>
+            <td><form onSubmit={event => caller.deleteEntry(event, n.id)}><Button type="submit" text="Poista"/></form></td>
+          </tr>
+        )}
+      </tbody>
+    </table>
   </div>
 )
 
 const Form = ({caller,submit}) => (
   <form onSubmit={caller.addName}>
       <Inputs caller={caller}/>
-      <Button type="submit"/>
+      <Button type="submit" text="Lähetä"/>
     </form>
 )
 
@@ -117,9 +122,9 @@ const Inputs = ({caller}) => (
   </div>
 )
 
-const Button = (type) => (
+const Button = ({type, text}) => (
   <div>
-    <button type={type}>lisää</button>
+    <button type={type}>{text}</button>
   </div>
 )
 
