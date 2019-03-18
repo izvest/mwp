@@ -34,8 +34,8 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const per = persons.find(p => p.id === id )
-    if ( note ) {
-        response.json(note)
+    if ( per ) {
+        response.json(per)
     } else {
         response.status(404).end()
     }
@@ -43,7 +43,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    per = persons.filter(p => p.id !== id)
+    persons = persons.filter(p => p.id !== id)
   
     response.status(204).end()
 })
