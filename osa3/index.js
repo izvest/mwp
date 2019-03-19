@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 app.use(bodyParser.json())
+app.use(cors())
 
 let persons =  [
       {
@@ -41,7 +43,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
   })
 
-app.delete('/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(p => p.id !== id)
   
@@ -60,7 +62,7 @@ app.post('/api/persons', (request, response) => {
     const per = {
         name: body.name,
         number: body.number,
-        id: Math.random()*10000
+        id: Math.round(Math.random()*10000)
     }
     
     persons = persons.concat(per)
@@ -68,7 +70,7 @@ app.post('/api/persons', (request, response) => {
     response.status(201).end()
   })
 
-const PORT = 3001
+const PORT = process.env.port ||3001
     app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

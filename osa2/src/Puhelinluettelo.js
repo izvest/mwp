@@ -16,7 +16,7 @@ class Puhelinluettelo extends React.Component {
   )
 
   fetchData = () => (
-    axios.get('http://localhost:3001/persons').then(response => {
+    axios.get('http://localhost:3001/api/persons').then(response => {
       this.setState({
         persons: response.data,
         newName: '',
@@ -39,7 +39,7 @@ class Puhelinluettelo extends React.Component {
     event.preventDefault()
     if(window.confirm("You sure you want to delete this, m8?")){
       console.log(idNum)
-      axios.delete('http://localhost:3001/persons/'+idNum).then(response => {
+      axios.delete('http://localhost:3001/api/persons/'+idNum).then(response => {
         console.log("contact deleted")
         this.fetchData()
       })
@@ -63,7 +63,7 @@ class Puhelinluettelo extends React.Component {
           newNumber: ''
         })
       }else{
-        axios.post('http://localhost:3001/persons', nameObject)
+        axios.post('http://localhost:3001/api/persons', nameObject)
           .then(response => {
             console.log(response)
             this.fetchData()
