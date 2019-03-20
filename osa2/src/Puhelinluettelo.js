@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import personsService from './services/persons'
 
 class Puhelinluettelo extends React.Component {
   constructor(props) {
@@ -16,33 +16,32 @@ class Puhelinluettelo extends React.Component {
   )
 
   fetchData = () => (
-    axios.get('http://localhost:3001/api/persons').then(response => {
+    personsService.getAll().then(response => {
       this.setState({
         persons: response.data,
         newName: '',
         newNumber: ''
       })
-    })
+    }).catch(error => "fetching data failed: "+error)
   )
 
   handleNameChange = (event) => {
-    console.log(event.target.value)
     this.setState({ newName: event.target.value })
   }
 
   handleNumberChange = (event) => {
-    console.log(event.target.value)
     this.setState({ newNumber: event.target.value })
   }
 
   deleteEntry = (event, idNum) => {
     event.preventDefault()
     if(window.confirm("You sure you want to delete this, m8?")){
-      console.log(idNum)
-      axios.delete('http://localhost:3001/api/persons/'+idNum).then(response => {
-        console.log("contact deleted")
-        this.fetchData()
-      })
+      personsService.del(idNum).then(response => {
+        console.log(response)
+        this.setState({
+          persons: this.state.persons.filter(p => p.id !== idNum)
+        })
+      }).catch(error => "delete failed: "+error)
     }
   }
 
@@ -63,11 +62,13 @@ class Puhelinluettelo extends React.Component {
           newNumber: ''
         })
       }else{
-        axios.post('http://localhost:3001/api/persons', nameObject)
+       personsService.create(nameObject)
           .then(response => {
             console.log(response)
-            this.fetchData()
-          })
+            this.setState({
+              persons: this.state.persons.concat(nameObject)
+            })
+          }).catch(error => "add failed: "+error)
       }
     }
   }
