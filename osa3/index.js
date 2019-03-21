@@ -2,53 +2,47 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('build'))
 
-let persons =  [
-      {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-      },
-      {
-        "name": "Martti Tienari",
-        "number": "040-123456",
-        "id": 2
-      },
-      {
-        "name": "Arto Järvinen",
-        "number": "040-123456",
-        "id": 3
-      },
-      {
-        "name": "Lea Kutvonen",
-        "number": "040-123456",
-        "id": 4
-      }
-    ]
+const format = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+}
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+  Person
+  .find({})
+  .then(persons => {
+    res.json(persons.map(format))
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const per = persons.find(p => p.id === id )
-    if ( per ) {
-        response.json(per)
-    } else {
-        response.status(404).end()
-    }
+    Person
+    .findById(request.params.id)
+    .then(per => {
+      response.json(format(per))
+    }).catch(error => {
+      console.log(error)
+      response.status(404).end()
+    })
   })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(p => p.id !== id)
-  
-    response.status(204).end()
+   Person
+   .findByIdAndDelete(request.params.id)
+   .then(response.status(204).end())
+   .catch(error => {
+    console.log(error)
+    response.status(404).end()
+  })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -56,17 +50,18 @@ app.post('/api/persons', (request, response) => {
 
     if (body.name === undefined || body.number === undefined) {
         return response.status(400).json({error: 'content missing. ensure you have both name and number'})
-    }else if(persons.map(e => e.name).indexOf(body.name) !== -1) {
-        return response.status(400).json({error: 'duplicate: name already in directory'})
     }
     
-    const per = {
+    const per = new Person ({
         name: body.name,
-        number: body.number,
-        id: Math.round(Math.random()*10000)
-    }
+        number: body.number
+    })
     
-    persons = persons.concat(per)
+    per
+    .save()
+    .then(savedPer => {
+      response.json(format(savedPer))
+    })
 
     response.status(201).end()
   })

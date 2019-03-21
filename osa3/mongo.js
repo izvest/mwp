@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const pwd = require('./passwd');
 
-// Replace with the URL of your own database. Do not store the password on GitHub!
 const url = 'mongodb+srv://mwd:'+pwd.givePass()+'@mwdcluster-m37cw.mongodb.net/mwdosa3'
 
 mongoose.connect(url)
