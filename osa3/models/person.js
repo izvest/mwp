@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const pwd = require('../passwd');
+//const pwd = require('../passwd');
 
-const url = 'mongodb+srv://mwd:'+pwd.givePass()+'@mwdcluster-m37cw.mongodb.net/mwdosa3'
+const url = process.env.MONGODB_URL
 
 mongoose.connect(url)
 
