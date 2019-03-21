@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 //const pwd = require('../passwd');
 
+if ( process.env.NODE_ENV !== 'production' ) {
+    require('dotenv').config()
+  }
+
 const url = process.env.MONGODB_URL
 
 mongoose.connect(url)
