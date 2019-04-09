@@ -28,40 +28,40 @@ var newNote = ""
 
 class AddView extends React.Component{
   static navigationOptions = {
-    title: 'Menus'
+    title: 'Add a note'
   };
-
-  actualNotes = []
-
-  constructor(props){
-    super(props)
-    this.actualNotes = props.navigation.getParam('notes')
-  }
 
   addNote(event){
     event.preventDefault()
-    let x = [{
-      content: newNote
-    }]
-    if(this.actualNotes){
-      if(this.actualNotes.filter(note => note.content === newNote).length > 0){
+    try{
+      let x = [{
+        content: newNote
+      }]
+      
+      if(NotesView.getState().filter(note => note.content === newNote).length > 0){
         Alert.alert(
           'Error',
-          'Duplicate note',
+          'Note already exists',
           {text: 'OK', onPress: () => console.log('OK Pressed')},
           {cancelable: false},
         );
-      }else {
-        NotesView.setState({
-          notes: this.actualNotes.concat(x)
+      }
+      else {
+        NotesView.stateSetter({
+          notes: NotesView.getState.concat(x)
         })
       }
-    }else{
-      NotesView.setState({
-          notes: x
-        })
+      newNote = ""
     }
-    newNote = ""
+    catch(err){
+      Alert.alert(
+        'Error',
+        err,
+        {text: 'OK'},
+        {cancelable: false},
+      );
+      return
+    }
   }
 
   render() {
@@ -70,7 +70,7 @@ class AddView extends React.Component{
       <View style={styles.container}>
         <TextInput style={styles.textInput} onChangeText={text => newNote = text} value={newNote}/>
         <Button onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
-        <Button title="Return to homepage" onPress={() => navigate('Notes', {})} />
+        <Button title="Return to homepage" onPress={() => navigate('Notes')} />
       </View>
     );
   }
@@ -78,12 +78,8 @@ class AddView extends React.Component{
 
 class NotesView extends React.Component {
   static navigationOptions = {
-    title: 'Welcome to your notes app',
+    title: 'Notes App',
   };
-
-  state = {
-    notes: []
-  }
 
   constructor(props) {
     super(props)
@@ -92,7 +88,8 @@ class NotesView extends React.Component {
     }
   }
 
-  
+  static getState = () => (this.state.notes.bind(this))
+  static stateSetter = (p) => (this.setState(p).bind(this))
 
   render() {
     const {navigate} = this.props.navigation
@@ -101,7 +98,7 @@ class NotesView extends React.Component {
         <Text style={styles.paragraph} >
           {this.state.notes.map(note => <Text>{note.content + "\n"}</Text>)}
         </Text>
-        <Button title="Go add a new note" onPress={() => navigate('Add', {notes: this.state.notes.bind(this)})} />
+        <Button title="Go add a new note" onPress={() => navigate('Add')} />
       </ScrollView>
     );
   }
