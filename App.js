@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, ScrollView, StyleSheet, TextInput, Button, Alert} from 'react-native';
 import { Constants } from 'expo';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 // You can import from local files
 import AssetExample from './components/AssetExample';
@@ -23,8 +24,67 @@ const noteBank = [
   }
 ]
 
+var newNote = ""
 
-export default class App extends React.Component {
+class AddView extends React.Component{
+  static navigationOptions = {
+    title: 'Menus'
+  };
+
+  actualNotes = []
+
+  constructor(props){
+    super(props)
+    this.actualNotes = props.navigation.getParam('notes')
+  }
+
+  addNote(event){
+    event.preventDefault()
+    let x = [{
+      content: newNote
+    }]
+    if(this.actualNotes){
+      if(this.actualNotes.filter(note => note.content === newNote).length > 0){
+        Alert.alert(
+          'Error',
+          'Duplicate note',
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+          {cancelable: false},
+        );
+      }else {
+        NotesView.setState({
+          notes: this.actualNotes.concat(x)
+        })
+      }
+    }else{
+      NotesView.setState({
+          notes: x
+        })
+    }
+    newNote = ""
+  }
+
+  render() {
+    const {navigate} = this.props.navigation
+    return (
+      <View style={styles.container}>
+        <TextInput style={styles.textInput} onChangeText={text => newNote = text} value={newNote}/>
+        <Button onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
+        <Button title="Return to homepage" onPress={() => navigate('Notes', {})} />
+      </View>
+    );
+  }
+}
+
+class NotesView extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome to your notes app',
+  };
+
+  state = {
+    notes: []
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -32,42 +92,38 @@ export default class App extends React.Component {
     }
   }
 
-  newNote = ""
+  
 
   render() {
+    const {navigate} = this.props.navigation
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.notes}>
-          <Text style={styles.paragraph} >
+      <ScrollView style={styles.notes}>
+        <Text style={styles.paragraph} >
           {this.state.notes.map(note => <Text>{note.content + "\n"}</Text>)}
-          </Text>
-        </ScrollView>
-        <TextInput style={styles.textInput} onChangeText={text => this.newNote = text} value={this.newNote}/>
-        <Button style={styles.button} onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
-      </View>
+        </Text>
+        <Button title="Go add a new note" onPress={() => navigate('Add', {notes: this.state.notes.bind(this)})} />
+      </ScrollView>
     );
-  }
-
-  addNote(event){
-    event.preventDefault()
-    let x = [{
-      content: this.newNote
-    }]
-    if(this.state.notes.filter(note => note.content === this.newNote).length > 0){
-      Alert.alert(
-      'Error',
-      'Duplicate note',
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-      {cancelable: false},
-    );
-    }else {
-      this.setState({
-        notes: this.state.notes.concat(x)
-      })
-    }
-    this.newNote = ""
   }
 }
+
+const AppNavigator = createStackNavigator(
+  {
+    Notes: NotesView,
+    Add: AddView
+  },
+  {initialRouteName: "Notes"}
+);
+
+const AppContainer = createAppContainer(AppNavigator);
+
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -95,6 +151,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 2
+    borderWidth: 2,
+    color: '#fff'
   }
 });
