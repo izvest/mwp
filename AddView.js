@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Text, View, TextInput, Button, Alert} from 'react-native';
 import { styles } from './styles'
+import { noteBank } from './noteBank'
+import { NotesView } from './NotesView'
 
 export class AddView extends React.Component{
   static navigationOptions = {
@@ -17,7 +19,7 @@ export class AddView extends React.Component{
         content: this.newNote
       }]
       
-      if(NotesView.getState().filter(note => note.content === this.newNote).length > 0){
+      if(noteBank.getAll.filter(note => note.content === this.newNote).length > 0){
         Alert.alert(
           'Error',
           'Note already exists',
@@ -26,9 +28,8 @@ export class AddView extends React.Component{
         );
       }
       else {
-        NotesView.stateSetter({
-          notes: NotesView.getState.concat(x)
-        })
+        noteBank.addNote(this.newNote)
+        NotesView.update
       }
       this.newNote = ""
     }
@@ -47,7 +48,7 @@ export class AddView extends React.Component{
     const {navigate} = this.props.navigation
     return (
       <View style={styles.container}>
-        <TextInput style={styles.textInput} onChangeText={text => newNote = text} value={newNote}/>
+        <TextInput style={styles.textInput} onChangeText={text => this.newNote = text} value={this.newNote}/>
         <Button onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
         <Button title="Return to homepage" onPress={() => navigate('Notes')} />
       </View>
