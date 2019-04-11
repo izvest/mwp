@@ -9,38 +9,32 @@ export class AddView extends React.Component{
     title: 'Add a note'
   };
 
-  newNote = ""
-  st = this.props.navigation.stateSetter
+  nb:NoteBank
+
+  constructor(props){
+    super()
+    this.nb = props.navigation.getParam('notes')
+    let newNote = ""
+  }
 
   addNote(event){
     event.preventDefault()
+    console.log("here")
     try{
-      let x = [{
-        content: this.newNote
-      }]
-      
-      if(noteBank.getAll.filter(note => note.content === this.newNote).length > 0){
-        Alert.alert(
-          'Error',
-          'Note already exists',
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-          {cancelable: false},
-        );
+      console.log("here2")
+      if(this.nb.getAll.filter(note => note.content === this.newNote).length > 0){
+        console.log("here3")
+        Alert.alert('Error','Note already exists',{text: 'OK'},{cancelable: false});
       }
       else {
-        noteBank.addNote(this.newNote)
-        NotesView.update
+        console.log("here4")
+        this.nb.add(this.newNote)
+        console.log("here5")
       }
       this.newNote = ""
     }
     catch(err){
-      Alert.alert(
-        'Error',
-        err,
-        {text: 'OK'},
-        {cancelable: false},
-      );
-      return
+      Alert.alert('Error',err,{text: 'OK'},{cancelable: false});
     }
   }
 
@@ -48,9 +42,10 @@ export class AddView extends React.Component{
     const {navigate} = this.props.navigation
     return (
       <View style={styles.container}>
+        <Text>{this.nb.getAll}</Text>
         <TextInput style={styles.textInput} onChangeText={text => this.newNote = text} value={this.newNote}/>
         <Button onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
-        <Button title="Return to homepage" onPress={() => navigate('Notes')} />
+        <Button title="Return to homepage" onPress={() => navigate('Notes', {notes: this.nb})} />
       </View>
     );
   }
