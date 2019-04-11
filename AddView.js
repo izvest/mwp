@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, TextInput, Button, Alert} from 'react-native';
 import { styles } from './styles'
-import { noteBank } from './noteBank'
+import { NoteBank } from './NoteBank'
 import { NotesView } from './NotesView'
 
 export class AddView extends React.Component{
@@ -14,27 +14,24 @@ export class AddView extends React.Component{
   constructor(props){
     super()
     this.nb = props.navigation.getParam('notes')
-    let newNote = ""
   }
+
+  newNote:string = ""
 
   addNote(event){
     event.preventDefault()
-    console.log("here")
     try{
-      console.log("here2")
-      if(this.nb.getAll.filter(note => note.content === this.newNote).length > 0){
-        console.log("here3")
+      if(this.nb.getAll().filter(note => note.content === this.newNote).length > 0){
         Alert.alert('Error','Note already exists',{text: 'OK'},{cancelable: false});
       }
       else {
-        console.log("here4")
         this.nb.add(this.newNote)
-        console.log("here5")
+        console.log("AddView - New note added: "+this.newNote)
       }
       this.newNote = ""
     }
     catch(err){
-      Alert.alert('Error',err,{text: 'OK'},{cancelable: false});
+      console.log("AddView - "+err)
     }
   }
 
