@@ -12,17 +12,22 @@ export class NoteBank extends React.Component{
     }
   }
 
-  add = (note:String) => {
+  add(note:String) {
     let x = {
       content: note
     }
-    let curr = this.state.data
+    console.log("NoteBank - Adding new note: "+note)
+    let newData = this.state.data.concat(x)
+    console.log(newData)
     this.setState({
-      data: curr.concat(x)
+      data: newData
     })
   }
 
-  getAll = () => (this.state.data)
+  getAll = () => {
+    console.log("NoteBank - fetching all the notes") 
+    return(this.state.data)
+  }
 
   render() {
     const {navigate} = this.props.navigation
