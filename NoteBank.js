@@ -35,11 +35,8 @@ export class NoteBank extends React.Component{
   }
 
 /*
-  add = async (note:String) => {
-    let newData = this.state.data.concat(note)
-    try { await AsyncStorage.setItem(key, newData); } 
-    catch (err) { console.log(err) } 
-    finally { this.setState({data: newData})}
+  add = (note:String) => {
+    AsyncStorage.setItem(Date.now(), note)
   };
 
   getAll = async () => {
@@ -49,7 +46,7 @@ export class NoteBank extends React.Component{
       if (items !== null) {
         // We have data!!
         console.log(items);
-        return [items]
+        return items
       }
       else{return ["empty"]}
     } 
