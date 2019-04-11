@@ -3,13 +3,15 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import {AddView} from './AddView'
 import {NotesView} from './NotesView'
+import {NoteBank} from './NoteBank'
 
 const AppNavigator = createStackNavigator(
   {
+    Bank: NoteBank,
     Notes: NotesView,
     Add: AddView
   },
-  {initialRouteName: "Notes"}
+  {initialRouteName: "Bank"}
 );
 
 const AppContainer = createAppContainer(AppNavigator);
