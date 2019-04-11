@@ -8,41 +8,41 @@ export class NoteBank extends React.Component{
   constructor(){
     super()
     this.state = {
-      data: [{id: 1, content: "Hei"},{id: 2, content: "moi"}]
+      data: [{id: 1, content: "Hei"},{id: 2, content: "And"}]
     }
   }
 
   add(note:String) {
-    let x = {
+    let newNote = {
+      id: Date.now(),
       content: note
     }
-    console.log("NoteBank - Adding new note: "+note)
-    let newData = this.state.data.concat(x)
-    console.log(newData)
-    this.setState({
-      data: newData
-    })
+    console.log("NoteBank.add - Adding new note: "+note)
+    this.setState(prevState => ({
+      data: prevState.data.concat(newNote)
+    }))
   }
 
   getAll = () => {
-    console.log("NoteBank - fetching all the notes") 
+    console.log("NoteBank.getAll - fetching all the notes")
+    console.log(this.state.data)
     return(this.state.data)
   }
 
   render() {
-    const {navigate} = this.props.navigation
-    return (() => navigate('Notes', {notes: this}));
+    this.props.navigation.navigate('Notes', {notes: this})
+    return null
   }
 
 /*
-  static add = async (note:String) => {
+  add = async (note:String) => {
     let newData = this.state.data.concat(note)
     try { await AsyncStorage.setItem(key, newData); } 
     catch (err) { console.log(err) } 
     finally { this.setState({data: newData})}
   };
 
-  static getAll = async () => {
+  getAll = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const items = await AsyncStorage.multiGet(keys);
