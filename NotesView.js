@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, ScrollView, Button } from 'react-native';
-import { noteBank } from './noteBank'
+import { NoteBank } from './noteBank'
 import { styles } from './styles'
 
 export class NotesView extends React.Component {
@@ -8,27 +8,22 @@ export class NotesView extends React.Component {
     title: 'Notes App',
   };
 
+  nb:NoteBank
+
   constructor(props) {
     super(props)
-    this.state = {
-      notes: []
-    }
+    this.nb = props.navigation.getParam('notes')
   }
-
-  componentWillMount(){
-    this.setState({notes: noteBank.getAll})
-  }
-
-  static update = () => (this.setState({notes: noteBank.getAll }))
 
   render() {
     const {navigate} = this.props.navigation
     return (
       <ScrollView style={styles.notes}>
         <Text style={styles.paragraph} >
-          {this.state.notes  ? this.state.notes.map(note => <Text>{note.content + "\n"}</Text>) : "No notes found"}
+          {this.nb ? "" : "Notes object null\n"}
+          {this.nb.getAll ? this.nb.getAll.map(note => <Text>{note.content + "\n"}</Text>) : "Notes array is null"}
         </Text>
-        <Button title="Go add a new note" onPress={() => navigate('Add')} />
+        <Button title="Go add a new note" onPress={() => navigate('Add', {notes: this.nb})} />
       </ScrollView>
     );
   }
