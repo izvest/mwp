@@ -11,7 +11,7 @@ const AppNavigator = createStackNavigator(
     Notes: NotesView,
     Add: AddView
   },
-  {initialRouteName: "Bank"}
+  {initialRouteName: "Notes"}
 );
 
 const AppContainer = createAppContainer(AppNavigator);
