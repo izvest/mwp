@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {AsyncStorage} from 'react-native';
-//AsyncStorage.setItem(key, {})
 
 const key = "notes"
 
@@ -35,20 +34,25 @@ export class NoteBank extends React.Component{
   }
 
 /*
-  add = (note:String) => {
-    AsyncStorage.setItem(Date.now(), note)
+  add = async (note:String) => {
+    let current = await this.getAll
+    var newNote = {id: Date.now(), content: note}
+    var newObject
+
+    if(current === null){ newObject = {notes: [newNote]} }
+    else{
+      let obj = JSON.parse(current)
+      newObject = obj.notes.concat(note)
+      let newThing = JSON.stringify(newObject)
+    }
+    AsyncStorage.setItem('notes', newObject)
   };
 
   getAll = async () => {
     try {
-      const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-      if (items !== null) {
-        // We have data!!
-        console.log(items);
-        return items
-      }
-      else{return ["empty"]}
+      const notes = await AsyncStorage.getItem('notes')
+      let obj = JSON.parse(notes)
+      return obj
     } 
     catch (err) { console.log(err) } 
   };*/
