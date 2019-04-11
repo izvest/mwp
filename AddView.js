@@ -10,13 +10,12 @@ export class AddView extends React.Component{
   };
 
   nb:NoteBank
+  newNote:string = ""
 
   constructor(props){
     super()
     this.nb = props.navigation.getParam('notes')
   }
-
-  newNote:string = ""
 
   addNote(event){
     event.preventDefault()
@@ -26,23 +25,20 @@ export class AddView extends React.Component{
       }
       else {
         this.nb.add(this.newNote)
-        console.log("AddView - New note added: "+this.newNote)
       }
-      this.newNote = ""
     }
-    catch(err){
-      console.log("AddView - "+err)
-    }
+    catch(err){ console.log("AddView.addNote - Error: "+err) }
+    finally{ this.newNote = "" }
   }
 
   render() {
     const {navigate} = this.props.navigation
     return (
       <View style={styles.container}>
-        <Text>{this.nb.getAll}</Text>
         <TextInput style={styles.textInput} onChangeText={text => this.newNote = text} value={this.newNote}/>
-        <Button onPress={e => this.addNote(e)} title="Add new note" color="#849984"/>
-        <Button title="Return to homepage" onPress={() => navigate('Notes', {notes: this.nb})} />
+        <Text>"\n\n\n"</Text>
+        <Button onPress={e => this.addNote(e)} title="Add new note" height/>
+        <Button title="Return to homepage" onPress={() => navigate('Notes', {notes: this.nb})} color="gray" />
       </View>
     );
   }
