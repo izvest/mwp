@@ -1,15 +1,35 @@
+import * as React from 'react';
 import {AsyncStorage} from 'react-native';
+//AsyncStorage.setItem(key, {})
 
 const key = "notes"
 
-export class noteBank {
+export class NoteBank extends React.Component{
   constructor(){
-    AsyncStorage.setItem(key, {})
+    super()
     this.state = {
-      data: []
+      data: [{id: 1, content: "Hei"},{id: 2, content: "moi"}]
     }
   }
 
+  add = (note:String) => {
+    let x = {
+      content: note
+    }
+    let curr = this.state.data
+    this.setState({
+      data: curr.concat(x)
+    })
+  }
+
+  getAll = () => (this.state.data)
+
+  render() {
+    const {navigate} = this.props.navigation
+    return (() => navigate('Notes', {notes: this}));
+  }
+
+/*
   static add = async (note:String) => {
     let newData = this.state.data.concat(note)
     try { await AsyncStorage.setItem(key, newData); } 
@@ -29,5 +49,5 @@ export class noteBank {
       else{return ["empty"]}
     } 
     catch (err) { console.log(err) } 
-  };
+  };*/
 }
