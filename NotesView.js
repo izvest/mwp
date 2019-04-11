@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, ScrollView, Button } from 'react-native';
-import { NoteBank } from './noteBank'
+import { NoteBank } from './NoteBank'
 import { styles } from './styles'
 
 export class NotesView extends React.Component {
@@ -12,7 +12,7 @@ export class NotesView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.nb = props.navigation.getParam('notes')
+    this.nb = props.navigation.getParam('notes') || new NoteBank()
   }
 
   render() {
@@ -21,7 +21,7 @@ export class NotesView extends React.Component {
       <ScrollView style={styles.notes}>
         <Text style={styles.paragraph} >
           {this.nb ? "" : "Notes object null\n"}
-          {this.nb.getAll ? this.nb.getAll.map(note => <Text>{note.content + "\n"}</Text>) : "Notes array is null"}
+          {this.nb.getAll ? this.nb.getAll().map(note => <Text>{note.content + "\n"}</Text>) : "Notes array is null"}
         </Text>
         <Button title="Go add a new note" onPress={() => navigate('Add', {notes: this.nb})} />
       </ScrollView>
